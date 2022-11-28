@@ -1,8 +1,153 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { fetchAPI } from '../../utils/fetchAPI'
 import Header from '../include/Header'
 import MainSearch from '../layout/MainSearch'
 
+import Loader from '../Loader'
+
+function RankingItem(props) {
+  return (
+    <li className="item">
+      <div>{props.index + 1}</div>
+      <div>
+        <img src={`${props.ranking.images.coverart}`} alt="" />
+      </div>
+      <div>{props.ranking.title}</div>
+      {/* <div>아무노래</div> */}
+      <div>{props.ranking.subtitle}</div>
+      <div>
+        <img
+          src="https://raw.githubusercontent.com/kimsangjunv1/react_project_pick/main/src/styles/img/like.svg"
+          alt=""
+        />
+        Likes {props.ranking.key.slice(0, 3)}
+      </div>
+      <div>03:52</div>
+    </li>
+  )
+}
+
+function AlbumItem(props) {
+  return (
+    <div className="album_item">
+      <img src={`${props.album.images.coverart}`} alt="앨범 아트" />
+      <img
+        className="shadow"
+        src={`${props.album.images.coverart}`}
+        alt="앨범 아트 그림자"
+      />
+      <p>IVE (아이브)</p>
+      <h2>After LIKE</h2>
+    </div>
+  )
+}
+
+function ArtistItem(props) {
+  return (
+    <div className="artist unWidth">
+      <img
+        className="unWidth_artist"
+        src={`${props.artist.images.background}`}
+        alt=""
+      />
+      <div className="artistbox">
+        <p>몰라나도</p>
+        <h4>백예린 (Yerin Baek)</h4>
+        <div className="like">
+          <img
+            src="https://raw.githubusercontent.com/kimsangjunv1/react_project_pick/main/src/styles/img/like.svg"
+            alt=""
+          />
+          <p>Likes 5,677</p>
+        </div>
+        <audio
+          src={`${props.artist.hub.actions[1].uri}`}
+          type="audio/m4a"
+          controls
+          // autoPlay
+        >
+          <source src={`${props.artist.hub.actions[1].uri}`} type="audio/m4a" />
+        </audio>
+      </div>
+    </div>
+  )
+}
+
+// function WeatherItem(props) {
+//   return (
+//     <div className="playlist weather_info">
+//       <div className="weather_text_cont">
+//         <div className="weather_desc">
+//           <h2>오늘 같이 눈 오는 날!</h2>
+//           <p>눈오는 날 듣기 좋은 플레이리스트를 정리 해~보았다</p>
+//         </div>
+//         <div className="weather_condition">
+//           <img
+//             className=""
+//             src="assets/img/weather/weather_icon_snow.png"
+//             alt=""
+//           />
+//           <div className="degree_cont">
+//             <p>08°</p>
+//             {/* <p>{props.weather.city}</p> */}
+//           </div>
+//           <p>눈 오는 날 듣기 좋은 음악을 추천 해드릴게요</p>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+//유튜브
+//https://rapidapi.com/Glavier/api/youtube138/
+// function YoutubeItem(props) {
+//   return <img src={`${props.youtube.video.thumbnails.url}`} alt="" />
+// }
+
 const Main = () => {
+  const [ranking, setRanking] = useState(null)
+  const [album, setAlbum] = useState(null)
+  const [artist, setArtist] = useState(null)
+  // const [weather, setWeather] = useState(null)
+  // const [youtube, setYoutube] = useState(null)
+
+  useEffect(() => {
+    fetchAPI(
+      `charts/track?locale=ko-KR&listId=ip-country-chart-KR&pageSize=5&startFrom=0`
+    ).then((data) => setRanking(data.tracks))
+  }, [])
+
+  useEffect(() => {
+    fetchAPI(
+      `charts/track?locale=ko-KR&listId=ip-country-chart-KR&pageSize=10&startFrom=0`
+    ).then((data) => setAlbum(data.tracks))
+  }, [])
+
+  useEffect(() => {
+    fetchAPI(
+      `charts/track?locale=ko-KR&listId=ip-country-chart-KR&pageSize=10&startFrom=0`
+    ).then((data) => setArtist(data.tracks))
+  }, [])
+
+  // 날씨
+  // useEffect(() => {
+  //   fetchAPIs(`weather?location=sunnyvale&format=json&u=f`).then((data) =>
+  //     setWeather(data)
+  //   )
+  // }, [])
+
+  //유튜브
+  // useEffect(() => {
+  //   fetchAPIyt(`search/?q=겨울 playlist&hl=ko&gl=KR`).then((data) =>
+  //     setYoutube(data.contents)
+  //   )
+  // }, [])
+
+  if (!ranking?.length) return <Loader />
+  if (!album?.length) return <Loader />
+  if (!artist?.length) return <Loader />
+  // if (!weather?.length) return <Loader />
+  // if (!youtube?.length) return <Loader />
   return (
     <>
       <Header />
@@ -10,13 +155,15 @@ const Main = () => {
         <section id="contents">
           <MainSearch />
           <div className="main_cont">
-            기상별 음악 추천
             <section>
               <div className="section_title">
                 <h2>오늘의 날씨에 맞는 음악은?</h2>
                 <p>여기에서 날씨에 맞는 음악을 추천해드릴게요!</p>
               </div>
               <div className="weather_cont">
+                {/* {weather.map((weather, index) => (
+                  <WeatherItem key={index} weather={weather} />
+                ))} */}
                 <div className="playlist weather_info">
                   <div className="weather_text_cont">
                     <div className="weather_desc">
@@ -26,7 +173,7 @@ const Main = () => {
                     <div className="weather_condition">
                       <img
                         className=""
-                        src="assets/img/weather/weather_icon_snow.png"
+                        src="https://github.com/kimsangjunv1/react_project_pick/blob/main/src/styles/img/weather/weather_snow.png?raw=true"
                         alt=""
                       />
                       <div className="degree_cont">
@@ -61,7 +208,6 @@ const Main = () => {
                 </div>
               </div>
             </section>
-            계절/계졀관련 행사 음악 추천
             <section>
               <div className="section_title">
                 <h2>다가온다, 크리스마-스!</h2>
@@ -70,21 +216,29 @@ const Main = () => {
                   들어볼래요?
                 </p>
               </div>
+
               <div className="season_cont">
                 <div className="season_youtube_link">
-                  <img src="assets/img/season/season_banner.jpg" alt="" />
+                  {/* {youtube.map((youtube, index) => (
+                    <YoutubeItem key={index} youtube={youtube} />
+                  ))} */}
+                  <img
+                    src="https://github.com/kimsangjunv1/react_project_pick/blob/main/src/styles/img/playlist.jpg?raw=true"
+                    alt=""
+                  />
                 </div>
               </div>
             </section>
-            앨범
             <section>
               <div className="section_title">
                 <h2>Albums</h2>
                 <p>이번에 추천하는 인기 앨범</p>
               </div>
               <div className="album_cont">
-                앨범아트
-                <div className="album_item">
+                {album.map((album, index) => (
+                  <AlbumItem key={index} album={album} />
+                ))}
+                {/* <div className="album_item">
                   <img src="assets/img/album/ive_album.jpg" alt="앨범 아트" />
                   <img
                     className="shadow"
@@ -93,65 +247,9 @@ const Main = () => {
                   />
                   <p>IVE (아이브)</p>
                   <h2>After LIKE</h2>
-                </div>
-                앨범아트
-                <div className="album_item">
-                  <img src="assets/img/album/ive_album.jpg" alt="앨범 아트" />
-                  <img
-                    className="shadow"
-                    src="assets/img/album/ive_album.jpg"
-                    alt="앨범 아트 그림자"
-                  />
-                  <p>IVE (아이브)</p>
-                  <h2>After LIKE</h2>
-                </div>
-                앨범아트
-                <div className="album_item">
-                  <img src="assets/img/album/ive_album.jpg" alt="앨범 아트" />
-                  <img
-                    className="shadow"
-                    src="assets/img/album/ive_album.jpg"
-                    alt="앨범 아트 그림자"
-                  />
-                  <p>IVE (아이브)</p>
-                  <h2>After LIKE</h2>
-                </div>
-                앨범아트
-                <div className="album_item">
-                  <img src="assets/img/album/ive_album.jpg" alt="앨범 아트" />
-                  <img
-                    className="shadow"
-                    src="assets/img/album/ive_album.jpg"
-                    alt="앨범 아트 그림자"
-                  />
-                  <p>IVE (아이브)</p>
-                  <h2>After LIKE</h2>
-                </div>
-                앨범아트
-                <div className="album_item">
-                  <img src="assets/img/album/ive_album.jpg" alt="앨범 아트" />
-                  <img
-                    className="shadow"
-                    src="assets/img/album/ive_album.jpg"
-                    alt="앨범 아트 그림자"
-                  />
-                  <p>IVE (아이브)</p>
-                  <h2>After LIKE</h2>
-                </div>
-                앨범아트
-                <div className="album_item">
-                  <img src="assets/img/album/ive_album.jpg" alt="앨범 아트" />
-                  <img
-                    className="shadow"
-                    src="assets/img/album/ive_album.jpg"
-                    alt="앨범 아트 그림자"
-                  />
-                  <p>IVE (아이브)</p>
-                  <h2>After LIKE</h2>
-                </div>
+                </div> */}
               </div>
             </section>
-            ranking / Artist
             <section id="ranking__temporary">
               <div className="ranking_cont unflex">
                 <div className="section_title">
@@ -162,82 +260,19 @@ const Main = () => {
                     <div>순위</div>
                     <div>썸넬</div>
                     <div>곡명</div>
-                    <div>앨범</div>
+                    {/* <div>앨범</div> */}
                     <div>아티스트</div>
                     <div>LIKE</div>
                     <div>시간</div>
                   </div>
                   <ul>
-                    <li className="item">
-                      <div>01</div>
-                      <div>
-                        <img src="assets/img/test_album.png" alt="" />
-                      </div>
-                      <div>늦은 밤 너의 밤 골목길에서</div>
-                      <div>아무노래</div>
-                      <div>ZICO(지코)</div>
-                      <div>
-                        <img src="assets/img/like.svg" alt="" />
-                        Likes 5,403
-                      </div>
-                      <div>03:52</div>
-                    </li>
-                    <li className="item">
-                      <div>02</div>
-                      <div>
-                        <img src="assets/img/test_album.png" alt="" />
-                      </div>
-                      <div>늦은 밤 너의 밤 골목길에서</div>
-                      <div>아무노래</div>
-                      <div>ZICO(지코)</div>
-                      <div>
-                        <img src="assets/img/like.svg" alt="" />
-                        Likes 5,403
-                      </div>
-                      <div>03:52</div>
-                    </li>
-                    <li className="item">
-                      <div>02</div>
-                      <div>
-                        <img src="assets/img/test_album.png" alt="" />
-                      </div>
-                      <div>늦은 밤 너의 밤 골목길에서</div>
-                      <div>아무노래</div>
-                      <div>ZICO(지코)</div>
-                      <div>
-                        <img src="assets/img/like.svg" alt="" />
-                        Likes 5,403
-                      </div>
-                      <div>03:52</div>
-                    </li>
-                    <li className="item">
-                      <div>02</div>
-                      <div>
-                        <img src="assets/img/test_album.png" alt="" />
-                      </div>
-                      <div>늦은 밤 너의 밤 골목길에서</div>
-                      <div>아무노래</div>
-                      <div>ZICO(지코)</div>
-                      <div>
-                        <img src="assets/img/like.svg" alt="" />
-                        Likes 5,403
-                      </div>
-                      <div>03:52</div>
-                    </li>
-                    <li className="item">
-                      <div>02</div>
-                      <div>
-                        <img src="assets/img/test_album.png" alt="" />
-                      </div>
-                      <div>늦은 밤 너의 밤 골목길에서</div>
-                      <div>아무노래</div>
-                      <div>ZICO(지코)</div>
-                      <div>
-                        <img src="assets/img/like.svg" alt="" />
-                        Likes 5,403
-                      </div>
-                      <div>03:52</div>
-                    </li>
+                    {ranking.map((ranking, index) => (
+                      <RankingItem
+                        key={index}
+                        ranking={ranking}
+                        index={index}
+                      />
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -246,115 +281,20 @@ const Main = () => {
                   <h2>Artist</h2>
                 </div>
                 <div className="artistWrap">
-                  <h3>
-                    Artist<em>277</em>
-                  </h3>
                   <div className="artistinner unflex_artist">
-                    아티스트 아이템
-                    <div className="artist unWidth">
+                    {artist.map((artist, index) => (
+                      <ArtistItem key={index} artist={artist} />
+                    ))}
+                    {/* <div className="artist unWidth">
                       <img src="assets/img/artist/artistimg.jpg" alt="" />
                       <div className="artistbox">
                         <p>백예린</p>
                         <h4>백예린 (Yerin Baek)</h4>
                         <div className="like">
-                          {/* <svg
-                            width="21"
-                            height="19"
-                            viewBox="0 0 21 19"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M6.12997 1C3.29676 1 1 3.29676 1 6.12997C1 11.2599 7.06269 15.9235 10.3272 17.0084C13.5917 15.9235 19.6544 11.2599 19.6544 6.12997C19.6544 3.29676 17.3577 1 14.5245 1C12.7895 1 11.2556 1.86132 10.3272 3.1797C9.39881 1.86132 7.86498 1 6.12997 1Z"
-                              fill="#1DD960"
-                              stroke="#1DD960"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg> */}
                           <p>Likes 5,677</p>
                         </div>
                       </div>
-                    </div>
-                    <div className="artist unWidth">
-                      <img src="assets/img/artist/artistimg.jpg" alt="" />
-                      <div className="artistbox">
-                        <p>백예린</p>
-                        <h4>백예린 (Yerin Baek)</h4>
-                        <div className="like">
-                          {/* <svg
-                            width="21"
-                            height="19"
-                            viewBox="0 0 21 19"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M6.12997 1C3.29676 1 1 3.29676 1 6.12997C1 11.2599 7.06269 15.9235 10.3272 17.0084C13.5917 15.9235 19.6544 11.2599 19.6544 6.12997C19.6544 3.29676 17.3577 1 14.5245 1C12.7895 1 11.2556 1.86132 10.3272 3.1797C9.39881 1.86132 7.86498 1 6.12997 1Z"
-                              fill="#1DD960"
-                              stroke="#1DD960"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg> */}
-                          <p>Likes 5,677</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="artist unWidth">
-                      <img src="assets/img/artist/artistimg.jpg" alt="" />
-                      <div className="artistbox">
-                        <p>백예린</p>
-                        <h4>백예린 (Yerin Baek)</h4>
-                        <div className="like">
-                          {/* <svg
-                            width="21"
-                            height="19"
-                            viewBox="0 0 21 19"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M6.12997 1C3.29676 1 1 3.29676 1 6.12997C1 11.2599 7.06269 15.9235 10.3272 17.0084C13.5917 15.9235 19.6544 11.2599 19.6544 6.12997C19.6544 3.29676 17.3577 1 14.5245 1C12.7895 1 11.2556 1.86132 10.3272 3.1797C9.39881 1.86132 7.86498 1 6.12997 1Z"
-                              fill="#1DD960"
-                              stroke="#1DD960"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg> */}
-                          <p>Likes 5,677</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="artist unWidth">
-                      <img src="assets/img/artist/artistimg.jpg" alt="" />
-                      <div className="artistbox">
-                        <p>백예린</p>
-                        <h4>백예린 (Yerin Baek)</h4>
-                        <div className="like">
-                          {/* <svg
-                            width="21"
-                            height="19"
-                            viewBox="0 0 21 19"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M6.12997 1C3.29676 1 1 3.29676 1 6.12997C1 11.2599 7.06269 15.9235 10.3272 17.0084C13.5917 15.9235 19.6544 11.2599 19.6544 6.12997C19.6544 3.29676 17.3577 1 14.5245 1C12.7895 1 11.2556 1.86132 10.3272 3.1797C9.39881 1.86132 7.86498 1 6.12997 1Z"
-                              fill="#1DD960"
-                              stroke="#1DD960"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg> */}
-                          <p>Likes 5,677</p>
-                        </div>
-                      </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -363,18 +303,18 @@ const Main = () => {
             <div className="music__control">
               <div className="progress">
                 <div className="bar">
-                  <audio
+                  {/* <audio
                     id="main-audio"
                     src="../assets/music/music_audio01.mp3"
                   ></audio>
                   <audio
                     id="main-audio"
                     src="../assets/music/music_audio02.mp3"
-                  ></audio>
+                  ></audio> */}
                 </div>
                 <div className="timer">
-                  <span className="current">0:00</span>
-                  <span className="duration">4:00</span>
+                  {/* <span className="current">0:00</span>
+                  <span className="duration">4:00</span> */}
                 </div>
               </div>
               <div className="volumeCont">
@@ -383,7 +323,7 @@ const Main = () => {
                   id="volume-control"
                   min="0"
                   max="10"
-                  value="5"
+                  defaultValue="5"
                   step="0.1"
                 />
               </div>
