@@ -11,8 +11,8 @@ function ArtistItem(props) {
       <img src={`${props.artist.images.background}`} alt="" />
       <div className="artistbox">
         <div className="artistbox_desc">
-          <p>백예린</p>
-          <h4>백예린 (Yerin Baek)</h4>
+          <p>{props.artist.title}</p>
+          <h4>{props.artist.subtitle}</h4>
         </div>
         <div className="like">
           <img

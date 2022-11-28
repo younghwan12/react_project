@@ -21,7 +21,14 @@ function RankingItem(props) {
         />
         Likes {props.ranking.key.slice(0, 3)}
       </div>
-      <div>03:52</div>
+      <audio className='audiobox'
+          src={`${props.ranking.hub.actions[1].uri}`}
+          type="audio/m4a"
+          controls
+          // autoPlay
+        >
+          <source src={`${props.ranking.hub.actions[1].uri}`} type="audio/m4a" />
+        </audio>   
     </li>
   )
 }
@@ -38,7 +45,7 @@ function FirstRankingItem(props) {
         />
       </div>
       <h4>01-</h4>
-      <p className="artist">벤(ben)</p>
+      <p className="artist">{props.ranking.subtitle}</p>
       <p className="song_title">{props.ranking.title}</p>
       <p className="refresh_time">
         <img
@@ -54,6 +61,14 @@ function FirstRankingItem(props) {
         />
         <span>올해 47주간 1위</span>
       </p>
+      <audio
+          src={`${props.ranking.hub.actions[1].uri}`}
+          type="audio/m4a"
+          controls
+          // autoPlay
+        >
+          <source src={`${props.ranking.hub.actions[1].uri}`} type="audio/m4a" />
+        </audio> 
     </div>
   )
 }
@@ -116,7 +131,7 @@ const Popular = () => {
                 {/* <div>앨범</div> */}
                 <div>아티스트</div>
                 <div>LIKE</div>
-                <div>시간</div>
+                <div>Play</div>
               </div>
               <ul>
                 {ranking.map((ranking, index) => (

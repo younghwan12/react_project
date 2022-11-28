@@ -15,14 +15,14 @@ function RankingItem(props) {
       <div>{props.ranking.title}</div>
       {/* <div>아무노래</div> */}
       <div>{props.ranking.subtitle}</div>
-      <div>
-        <img
-          src="https://raw.githubusercontent.com/kimsangjunv1/react_project_pick/main/src/styles/img/like.svg"
-          alt=""
-        />
-        Likes {props.ranking.key.slice(0, 3)}
-      </div>
-      <div>03:52</div>
+      <audio className='audiobox'
+          src={`${props.ranking.hub.actions[1].uri}`}
+          type="audio/m4a"
+          controls
+          // autoPlay
+        >
+          <source src={`${props.ranking.hub.actions[1].uri}`} type="audio/m4a" />
+        </audio>  
     </li>
   )
 }
@@ -36,8 +36,8 @@ function AlbumItem(props) {
         src={`${props.album.images.coverart}`}
         alt="앨범 아트 그림자"
       />
-      <p>IVE (아이브)</p>
-      <h2>After LIKE</h2>
+      <p>{props.album.subtitle}</p>
+      <h2>{props.album.title}</h2>
     </div>
   )
 }
@@ -51,8 +51,8 @@ function ArtistItem(props) {
         alt=""
       />
       <div className="artistbox">
-        <p>몰라나도</p>
-        <h4>백예린 (Yerin Baek)</h4>
+        <p>{props.artist.title.slice(0, 26)}</p>
+        <h4>{props.artist.subtitle}</h4>
         <div className="like">
           <img
             src="https://raw.githubusercontent.com/kimsangjunv1/react_project_pick/main/src/styles/img/like.svg"
@@ -256,15 +256,6 @@ const Main = () => {
                   <h2>Top Pick</h2>
                 </div>
                 <div className="list_cont maxWidth">
-                  <div className="ranking_list_header">
-                    <div>순위</div>
-                    <div>썸넬</div>
-                    <div>곡명</div>
-                    {/* <div>앨범</div> */}
-                    <div>아티스트</div>
-                    <div>LIKE</div>
-                    <div>시간</div>
-                  </div>
                   <ul>
                     {ranking.map((ranking, index) => (
                       <RankingItem
