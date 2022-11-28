@@ -3,151 +3,11 @@ import { fetchAPI } from '../../utils/fetchAPI'
 import Header from '../include/Header'
 import MainSearch from '../layout/MainSearch'
 
+import { AlbumCont, RankCont, ArtistCont } from '../'
+
 import Loader from '../Loader'
 
-function RankingItem(props) {
-  return (
-    <li className="item">
-      <div>{props.index + 1}</div>
-      <div>
-        <img src={`${props.ranking.images.coverart}`} alt="" />
-      </div>
-      <div>{props.ranking.title}</div>
-      {/* <div>아무노래</div> */}
-      <div>{props.ranking.subtitle}</div>
-      <audio className='audiobox'
-          src={`${props.ranking.hub.actions[1].uri}`}
-          type="audio/m4a"
-          controls
-          // autoPlay
-        >
-          <source src={`${props.ranking.hub.actions[1].uri}`} type="audio/m4a" />
-        </audio>  
-    </li>
-  )
-}
-
-function AlbumItem(props) {
-  return (
-    <div className="album_item">
-      <img src={`${props.album.images.coverart}`} alt="앨범 아트" />
-      <img
-        className="shadow"
-        src={`${props.album.images.coverart}`}
-        alt="앨범 아트 그림자"
-      />
-      <p>{props.album.subtitle}</p>
-      <h2>{props.album.title}</h2>
-    </div>
-  )
-}
-
-function ArtistItem(props) {
-  return (
-    <div className="artist unWidth">
-      <img
-        className="unWidth_artist"
-        src={`${props.artist.images.background}`}
-        alt=""
-      />
-      <div className="artistbox">
-        <p>{props.artist.title.slice(0, 26)}</p>
-        <h4>{props.artist.subtitle}</h4>
-        <div className="like">
-          <img
-            src="https://raw.githubusercontent.com/kimsangjunv1/react_project_pick/main/src/styles/img/like.svg"
-            alt=""
-          />
-          <p>Likes 5,677</p>
-        </div>
-        <audio
-          src={`${props.artist.hub.actions[1].uri}`}
-          type="audio/m4a"
-          controls
-          // autoPlay
-        >
-          <source src={`${props.artist.hub.actions[1].uri}`} type="audio/m4a" />
-        </audio>
-      </div>
-    </div>
-  )
-}
-
-// function WeatherItem(props) {
-//   return (
-//     <div className="playlist weather_info">
-//       <div className="weather_text_cont">
-//         <div className="weather_desc">
-//           <h2>오늘 같이 눈 오는 날!</h2>
-//           <p>눈오는 날 듣기 좋은 플레이리스트를 정리 해~보았다</p>
-//         </div>
-//         <div className="weather_condition">
-//           <img
-//             className=""
-//             src="assets/img/weather/weather_icon_snow.png"
-//             alt=""
-//           />
-//           <div className="degree_cont">
-//             <p>08°</p>
-//             {/* <p>{props.weather.city}</p> */}
-//           </div>
-//           <p>눈 오는 날 듣기 좋은 음악을 추천 해드릴게요</p>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-//유튜브
-//https://rapidapi.com/Glavier/api/youtube138/
-// function YoutubeItem(props) {
-//   return <img src={`${props.youtube.video.thumbnails.url}`} alt="" />
-// }
-
 const Main = () => {
-  const [ranking, setRanking] = useState(null)
-  const [album, setAlbum] = useState(null)
-  const [artist, setArtist] = useState(null)
-  // const [weather, setWeather] = useState(null)
-  // const [youtube, setYoutube] = useState(null)
-
-  useEffect(() => {
-    fetchAPI(
-      `charts/track?locale=ko-KR&listId=ip-country-chart-KR&pageSize=5&startFrom=0`
-    ).then((data) => setRanking(data.tracks))
-  }, [])
-
-  useEffect(() => {
-    fetchAPI(
-      `charts/track?locale=ko-KR&listId=ip-country-chart-KR&pageSize=10&startFrom=0`
-    ).then((data) => setAlbum(data.tracks))
-  }, [])
-
-  useEffect(() => {
-    fetchAPI(
-      `charts/track?locale=ko-KR&listId=ip-country-chart-KR&pageSize=10&startFrom=0`
-    ).then((data) => setArtist(data.tracks))
-  }, [])
-
-  // 날씨
-  // useEffect(() => {
-  //   fetchAPIs(`weather?location=sunnyvale&format=json&u=f`).then((data) =>
-  //     setWeather(data)
-  //   )
-  // }, [])
-
-  //유튜브
-  // useEffect(() => {
-  //   fetchAPIyt(`search/?q=겨울 playlist&hl=ko&gl=KR`).then((data) =>
-  //     setYoutube(data.contents)
-  //   )
-  // }, [])
-
-  if (!ranking?.length) return <Loader />
-  if (!album?.length) return <Loader />
-  if (!artist?.length) return <Loader />
-  // if (!weather?.length) return <Loader />
-  // if (!youtube?.length) return <Loader />
   return (
     <>
       <Header />
@@ -229,72 +89,15 @@ const Main = () => {
                 </div>
               </div>
             </section>
-            <section>
-              <div className="section_title">
-                <h2>Albums</h2>
-                <p>이번에 추천하는 인기 앨범</p>
-              </div>
-              <div className="album_cont">
-                {album.map((album, index) => (
-                  <AlbumItem key={index} album={album} />
-                ))}
-                {/* <div className="album_item">
-                  <img src="assets/img/album/ive_album.jpg" alt="앨범 아트" />
-                  <img
-                    className="shadow"
-                    src="assets/img/album/ive_album.jpg"
-                    alt="앨범 아트 그림자"
-                  />
-                  <p>IVE (아이브)</p>
-                  <h2>After LIKE</h2>
-                </div> */}
-              </div>
-            </section>
+            <AlbumCont />
             <section id="ranking__temporary">
-              <div className="ranking_cont unflex">
-                <div className="section_title">
-                  <h2>Top Pick</h2>
-                </div>
-                <div className="list_cont maxWidth">
-                  <ul>
-                    {ranking.map((ranking, index) => (
-                      <RankingItem
-                        key={index}
-                        ranking={ranking}
-                        index={index}
-                      />
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <div className="artist_cont unflex">
-                <div className="section_title">
-                  <h2>Artist</h2>
-                </div>
-                <div className="artistWrap">
-                  <div className="artistinner unflex_artist">
-                    {artist.map((artist, index) => (
-                      <ArtistItem key={index} artist={artist} />
-                    ))}
-                    {/* <div className="artist unWidth">
-                      <img src="assets/img/artist/artistimg.jpg" alt="" />
-                      <div className="artistbox">
-                        <p>백예린</p>
-                        <h4>백예린 (Yerin Baek)</h4>
-                        <div className="like">
-                          <p>Likes 5,677</p>
-                        </div>
-                      </div>
-                    </div> */}
-                  </div>
-                </div>
-              </div>
-              <div></div>
+              <RankCont />
+              <ArtistCont />
             </section>
             <div className="music__control">
               <div className="progress">
-                <div className="bar">
-                  {/* <audio
+                {/* <div className="bar"> */}
+                {/* <audio
                     id="main-audio"
                     src="../assets/music/music_audio01.mp3"
                   ></audio>
@@ -302,13 +105,13 @@ const Main = () => {
                     id="main-audio"
                     src="../assets/music/music_audio02.mp3"
                   ></audio> */}
-                </div>
-                <div className="timer">
-                  {/* <span className="current">0:00</span>
-                  <span className="duration">4:00</span> */}
-                </div>
+                {/* </div> */}
+                {/* <div className="timer">
+                  <span className="current">0:00</span>
+                  <span className="duration">4:00</span>
+                </div> */}
               </div>
-              <div className="volumeCont">
+              {/* <div className="volumeCont">
                 <input
                   type="range"
                   id="volume-control"
@@ -345,7 +148,7 @@ const Main = () => {
                   <i title="다음곡 재생" className="next" id="control-next"></i>
                   <i title="재생 목록" className="list" id="control-list"></i>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>

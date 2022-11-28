@@ -22,7 +22,7 @@ function App() {
         <Route path="/download" element={<Download />} />
         <Route path="/artist" element={<Artist />} />
         <Route path="/musicvideo" element={<Musicvideo />} />
-        <Route path="/musicplayer/:id" element={<Musicplayer />} />
+        <Route path="/musicplayer/:key" element={<Musicplayer />} />
       </Routes>
     </BrowserRouter>
   )
