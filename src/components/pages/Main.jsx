@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { fetchAPI } from '../../utils/fetchAPI'
+import React from 'react'
 import Header from '../include/Header'
 import MainSearch from '../layout/MainSearch'
 
 import { AlbumCont, RankCont, ArtistCont } from '../'
-
-import Loader from '../Loader'
 
 const Main = () => {
   return (
@@ -32,7 +29,6 @@ const Main = () => {
                     </div>
                     <div className="weather_condition">
                       <img
-                        className=""
                         src="https://github.com/kimsangjunv1/react_project_pick/blob/main/src/styles/img/weather/weather_snow.png?raw=true"
                         alt=""
                       />

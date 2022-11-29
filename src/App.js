@@ -8,7 +8,7 @@ import {
   Download,
   Artist,
   Musicvideo,
-  Musicplayer,
+  // Musicplayer,
 } from './components/'
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <Route path="/download" element={<Download />} />
         <Route path="/artist" element={<Artist />} />
         <Route path="/musicvideo" element={<Musicvideo />} />
-        <Route path="/musicplayer/:key" element={<Musicplayer />} />
+        {/* <Route path="/musicplayer/:key" element={<Musicplayer />} /> */}
       </Routes>
     </BrowserRouter>
   )
