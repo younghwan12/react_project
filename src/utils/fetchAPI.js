@@ -24,7 +24,7 @@ const BASE_URL = 'https://shazam.p.rapidapi.com'
 const options = {
   url: BASE_URL,
   params: {
-    maxResults: '48',
+    maxResults: '10',
   },
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_REPID_API_KEY,
